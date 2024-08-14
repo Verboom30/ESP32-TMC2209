@@ -1,268 +1,68 @@
-//----------------------------------------------------------------------------------------
-//--------------------- Test Simple transmission UART ------------------------------------
-//----------------------------------------------------------------------------------------
+/**
+ * Author Teemu Mäntykallio
+ * Initializes the library and runs the stepper motor.
+ */
 
-// #include <HardwareSerial.h>
+#include <TMCStepper.h>
 
-// #define SW_RX            16 // TMC2208/TMC2224 SoftwareSerial receive pin
-// #define SW_TX            17 // TMC2208/TMC2224 SoftwareSerial transmit pin
+#define DIR_PIN          0 // Direction
+#define STEP_PIN         2 // Step
 
+#define SERIAL_PORT Serial1 // TMC2208/TMC2224 HardwareSerial port
+#define DRIVER_ADDRESS 0b00 // TMC2209 Driver address according to MS1 and MS2
 
-// void setup() {
-//  Serial.begin(115200);
-//  Serial2.begin(115200,SERIAL_8N1,SW_RX,SW_TX);
-//  Serial2.println("Send Message Serial2");
-// }
-
-// void loop() {
-  
-// }
-
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-
-
-// #include <TMC2209.h>
-
-
-// // Instantiate TMC2209
-// TMC2209 stepper_driver;
-
-// HardwareSerial & serial_stream = Serial1;
-// const long SERIAL_BAUD_RATE = 115200;
-// const int DELAY = 3000;
-// const int RX_PIN = 16;
-// const int TX_PIN = 17;
-
-// void setup()
-// {
-//   Serial.begin(SERIAL_BAUD_RATE);
-//   stepper_driver.setup(serial_stream, SERIAL_BAUD_RATE, TMC2209::SERIAL_ADDRESS_0, RX_PIN, TX_PIN);
-// }
-
-// void loop()
-// {
-//   if (stepper_driver.isSetupAndCommunicating())
-//   {
-//     Serial.println("Stepper driver is setup and communicating!");
-//     Serial.println("Try turning driver power off to see what happens.");
-//   }
-//   else if (stepper_driver.isCommunicatingButNotSetup())
-//   {
-//     Serial.println("Stepper driver is communicating but not setup!");
-//     Serial.println("Running setup again...");
-//     stepper_driver.setup(serial_stream);
-//   }
-//   else
-//   {
-//     Serial.println("Stepper driver is not communicating!");
-//     Serial.println("Try turning driver power on to see what happens.");
-//   }
-//   Serial.println();
-//   delay(DELAY);
-// }
-
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-
-// #include <TMC2209.h>
-
-
-// // Instantiate TMC2209
-// TMC2209 stepper_driver;
-
-// HardwareSerial & serial_stream = Serial1;
-// const long SERIAL_BAUD_RATE = 115200;
-// const int DELAY = 1000000;
-// const int RX_PIN = 16;
-// const int TX_PIN = 17;
-
-// void setup()
-// {
-//   Serial.begin(SERIAL_BAUD_RATE);
-//   stepper_driver.setup(serial_stream, SERIAL_BAUD_RATE, TMC2209::SERIAL_ADDRESS_0, RX_PIN, TX_PIN);
-// }
-
-// void loop()
-// {
-//   Serial.println("*************************");
-//   Serial.println("getSettings()");
-//   TMC2209::Settings settings = stepper_driver.getSettings();
-//   Serial.print("settings.is_communicating = ");
-//   Serial.println(settings.is_communicating);
-//   Serial.print("settings.is_setup = ");
-//   Serial.println(settings.is_setup);
-//   Serial.print("settings.software_enabled = ");
-//   Serial.println(settings.software_enabled);
-//   Serial.print("settings.microsteps_per_step = ");
-//   Serial.println(settings.microsteps_per_step);
-//   Serial.print("settings.inverse_motor_direction_enabled = ");
-//   Serial.println(settings.inverse_motor_direction_enabled);
-//   Serial.print("settings.stealth_chop_enabled = ");
-//   Serial.println(settings.stealth_chop_enabled);
-//   Serial.print("settings.standstill_mode = ");
-//   switch (settings.standstill_mode)
-//   {
-//     case TMC2209::NORMAL:
-//       Serial.println("normal");
-//       break;
-//     case TMC2209::FREEWHEELING:
-//       Serial.println("freewheeling");
-//       break;
-//     case TMC2209::STRONG_BRAKING:
-//       Serial.println("strong_braking");
-//       break;
-//     case TMC2209::BRAKING:
-//       Serial.println("braking");
-//       break;
-//   }
-//   Serial.print("settings.irun_percent = ");
-//   Serial.println(settings.irun_percent);
-//   Serial.print("settings.irun_register_value = ");
-//   Serial.println(settings.irun_register_value);
-//   Serial.print("settings.ihold_percent = ");
-//   Serial.println(settings.ihold_percent);
-//   Serial.print("settings.ihold_register_value = ");
-//   Serial.println(settings.ihold_register_value);
-//   Serial.print("settings.iholddelay_percent = ");
-//   Serial.println(settings.iholddelay_percent);
-//   Serial.print("settings.iholddelay_register_value = ");
-//   Serial.println(settings.iholddelay_register_value);
-//   Serial.print("settings.automatic_current_scaling_enabled = ");
-//   Serial.println(settings.automatic_current_scaling_enabled);
-//   Serial.print("settings.automatic_gradient_adaptation_enabled = ");
-//   Serial.println(settings.automatic_gradient_adaptation_enabled);
-//   Serial.print("settings.pwm_offset = ");
-//   Serial.println(settings.pwm_offset);
-//   Serial.print("settings.pwm_gradient = ");
-//   Serial.println(settings.pwm_gradient);
-//   Serial.print("settings.cool_step_enabled = ");
-//   Serial.println(settings.cool_step_enabled);
-//   Serial.print("settings.analog_current_scaling_enabled = ");
-//   Serial.println(settings.analog_current_scaling_enabled);
-//   Serial.print("settings.internal_sense_resistors_enabled = ");
-//   Serial.println(settings.internal_sense_resistors_enabled);
-//   Serial.println("*************************");
-//   Serial.println();
-
-//   Serial.println("*************************");
-//   Serial.println("hardwareDisabled()");
-//   bool hardware_disabled = stepper_driver.hardwareDisabled();
-//   Serial.print("hardware_disabled = ");
-//   Serial.println(hardware_disabled);
-//   Serial.println("*************************");
-//   Serial.println();
-
-//   Serial.println("*************************");
-//   Serial.println("getStatus()");
-//   TMC2209::Status status = stepper_driver.getStatus();
-//   Serial.print("status.over_temperature_warning = ");
-//   Serial.println(status.over_temperature_warning);
-//   Serial.print("status.over_temperature_shutdown = ");
-//   Serial.println(status.over_temperature_shutdown);
-//   Serial.print("status.short_to_ground_a = ");
-//   Serial.println(status.short_to_ground_a);
-//   Serial.print("status.short_to_ground_b = ");
-//   Serial.println(status.short_to_ground_b);
-//   Serial.print("status.low_side_short_a = ");
-//   Serial.println(status.low_side_short_a);
-//   Serial.print("status.low_side_short_b = ");
-//   Serial.println(status.low_side_short_b);
-//   Serial.print("status.open_load_a = ");
-//   Serial.println(status.open_load_a);
-//   Serial.print("status.open_load_b = ");
-//   Serial.println(status.open_load_b);
-//   Serial.print("status.over_temperature_120c = ");
-//   Serial.println(status.over_temperature_120c);
-//   Serial.print("status.over_temperature_143c = ");
-//   Serial.println(status.over_temperature_143c);
-//   Serial.print("status.over_temperature_150c = ");
-//   Serial.println(status.over_temperature_150c);
-//   Serial.print("status.over_temperature_157c = ");
-//   Serial.println(status.over_temperature_157c);
-//   Serial.print("status.current_scaling = ");
-//   Serial.println(status.current_scaling);
-//   Serial.print("status.stealth_chop_mode = ");
-//   Serial.println(status.stealth_chop_mode);
-//   Serial.print("status.standstill = ");
-//   Serial.println(status.standstill);
-//   Serial.println("*************************");
-//   Serial.println();
-
-//   Serial.println();
-//   delay(DELAY);
-// }
-
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------
-
-#include <TMC2209.h>
-
-
-// Instantiate TMC2209
-TMC2209 stepper_driver;
-
-HardwareSerial & serial_stream = Serial1;
+//HardwareSerial & serial_stream = Serial1;
 const long SERIAL_BAUD_RATE = 115200;
 const int DELAY = 2000;
 const int RX_PIN = 16;
 const int TX_PIN = 17;
 
-const int32_t VELOCITY = 40000;
-// current values may need to be reduced to prevent overheating depending on
-// specific motor and power supply voltage
-const uint8_t RUN_CURRENT_PERCENT = 100;
+#define R_SENSE 0.11f // Match to your driver
+                     // SilentStepStick series use 0.11
+                     // UltiMachine Einsy and Archim2 boards use 0.2
+                     // Panucatt BSD2660 uses 0.1
+                     // Watterott TMC5160 uses 0.075
 
-void setup()
-{
-  Serial.begin(SERIAL_BAUD_RATE);
-  stepper_driver.setup(serial_stream, SERIAL_BAUD_RATE, TMC2209::SERIAL_ADDRESS_0, RX_PIN, TX_PIN);
+// Select your stepper driver type
+//TMC2130Stepper driver = TMC2130Stepper(CS_PIN, R_SENSE); // Hardware SPI
+//TMC2130Stepper driver = TMC2130Stepper(CS_PIN, R_SENSE, SW_MOSI, SW_MISO, SW_SCK); // Software SPI
+//TMC2208Stepper driver = TMC2208Stepper(&SERIAL_PORT, R_SENSE); // Hardware Serial0
+//TMC2208Stepper driver = TMC2208Stepper(SW_RX, SW_TX, R_SENSE); // Software serial
+//TMC2660Stepper driver = TMC2660Stepper(CS_PIN, R_SENSE); // Hardware SPI
+//TMC2660Stepper driver = TMC2660Stepper(CS_PIN, R_SENSE, SW_MOSI, SW_MISO, SW_SCK);
+//TMC5160Stepper driver = TMC5160Stepper(CS_PIN, R_SENSE);
+//TMC5160Stepper driver = TMC5160Stepper(CS_PIN, R_SENSE, SW_MOSI, SW_MISO, SW_SCK);
 
-  delay(DELAY);
+TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
+//TMC2209Stepper driver(SW_RX, SW_TX, R_SENSE, DRIVER_ADDRESS);
 
-  stepper_driver.setRunCurrent(RUN_CURRENT_PERCENT);
-  stepper_driver.enableCoolStep();
-  stepper_driver.enable();
-  stepper_driver.moveAtVelocity(VELOCITY);
+constexpr uint32_t steps_per_mm = 80;
+
+#include <AccelStepper.h>
+AccelStepper stepper = AccelStepper(stepper.DRIVER, STEP_PIN, DIR_PIN);
+
+void setup() {
+    Serial.begin(SERIAL_BAUD_RATE);
+    while(!Serial);
+    Serial.println("Start...");
+    driver.begin();             // Initiate pins and registeries
+    driver.rms_current(0.11);    // Set stepper current to 600mA. The command is the same as command TMC2130.setCurrent(600, 0.11, 0.5);
+    //driver.en_pwm_mode(1);      // Enable extremely quiet stepping
+    driver.pwm_autoscale(1);
+    driver.microsteps(16);
+
+    stepper.setMaxSpeed(50*steps_per_mm); // 100mm/s @ 80 steps/mm
+    stepper.setAcceleration(10*steps_per_mm); // 2000mm/s^2
+    stepper.setPinsInverted(false, false, true);
+    stepper.enableOutputs();
 }
 
-void loop()
-{
-  if (not stepper_driver.isSetupAndCommunicating())
-  {
-    Serial.println("Stepper driver not setup and communicating!");
-    return;
-  }
-
-  bool hardware_disabled = stepper_driver.hardwareDisabled();
-  TMC2209::Settings settings = stepper_driver.getSettings();
-  TMC2209::Status status = stepper_driver.getStatus();
-
-  if (hardware_disabled)
-  {
-    Serial.println("Stepper driver is hardware disabled!");
-  }
-  else if (not settings.software_enabled)
-  {
-    Serial.println("Stepper driver is software disabled!");
-  }
-  else if ((not status.standstill))
-  {
-    Serial.print("Moving at velocity ");
-    Serial.println(VELOCITY);
-
-    uint32_t interstep_duration = stepper_driver.getInterstepDuration();
-    Serial.print("which is equal to an interstep_duration of ");
-    Serial.println(interstep_duration);
-  }
-  else
-  {
-    Serial.println("Not moving, something is wrong!");
-  }
-
-  Serial.println();
-  delay(DELAY);
+void loop() {
+    if (stepper.distanceToGo() == 0) {
+        stepper.disableOutputs();
+        delay(100);
+        stepper.move(100*steps_per_mm); // Move 100mm
+        stepper.enableOutputs();
+    }
+    stepper.run();
 }
